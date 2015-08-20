@@ -1,0 +1,69 @@
+html, body{
+  width:100%;
+  height:100%;
+  padding:0;
+  margin:0;
+}
+
+div.cardpilevert {
+  width:100%;
+  position:fixed;
+  /*#height:150px; */
+  height:100%;
+  padding-top:200px;
+}
+
+div.cardpile {
+  width:200px;
+  display:block;
+  margin: 0 auto;
+  height:150px;
+  background-color:yellow;
+}
+
+div.foot {
+  position:fixed;
+  display:block;
+  bottom:0;
+  width:100%;
+  height:400px;
+}
+
+div.deckprep {
+  border:2px solid #99cc99;
+  width:600px;
+  height:150px;
+  margin: 0 auto;
+  top:0;
+  border-top: 2px solid gray;
+  padding-top:25px;
+  padding-bottom:0;
+  padding-left:50px;
+  display:block;
+  position:relative;
+  text-align:center;
+  background-color:rgba(200,200,200,0.3);
+  border-radius:10px;
+  opacity:0;
+}
+
+div.cardholder {
+  width:600px;
+  height:200px;
+  margin: 0 auto;
+  top:0;
+  background-color:green;
+  position:relative;
+  border-top: 2px solid gray;
+  padding-top:25px;
+  padding-left:50px;
+  display:block;
+}
+img.handcard {
+  float:left;
+  margin-right:-70px;
+  width:100px;
+  -webkit-box-shadow: -3px 6px 5px 0px rgba(0,0,0,0.75);
+  -moz-box-shadow: -3px 6px 5px 0px rgba(0,0,0,0.75);
+  box-shadow: -3px 6px 5px 0px rgba(0,0,0,0.75);
+}
