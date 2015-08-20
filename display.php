@@ -9,18 +9,24 @@
   {
     tid.remove();
   }
-
+  var draggedCard = "none";
   function setDragSettings()
   {
     $(".cardholder img").each(function(index, value){
       //alert($(value).attr("src"));
       $(value).on("dragstart", function(ev){
         //alert("dragstart");
-        $(value).animate({"width":"0px"}, 300, function(){$(value).remove()});
+        $(value).animate({"width":"70px"}, 300, function(){$(value).css("width", "0px")});
+        draggedCard = $(value).attr("src");
         //$(value).css("margin-right", "-100px");
+      });
+      $(value).on('dragend', function(ev){
+        //alert('dragstop');
+        $(value).animate({"width":"100px"}, 300, function(){});
       });
     });
   }
+  $(document).mouseoff
   $(document).ready(function(){
     setDragSettings();
   });
