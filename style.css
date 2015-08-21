@@ -40,11 +40,11 @@ div.deckprep {
   padding-bottom:0;
   padding-left:50px;
   display:block;
+  z-index:5;
   position:relative;
   text-align:center;
   background-color:rgba(200,200,200,0.3);
   border-radius:10px;
-  opacity:0;
 }
 
 div.cardholder {

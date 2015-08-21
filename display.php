@@ -9,6 +9,18 @@
   {
     tid.remove();
   }
+  var insidePrepArea = false;
+  var mouseX = -1;
+  var mouseY = -1; /*
+  $(document).on("dragover", function(event) {
+    mouseX = event.pageX;
+    mouseY = event.pageY;
+    console.log(mouseX + " " + mouseY)
+  }); */
+  $(document).on('dragover', function(evt) {
+    mouseX = evt.originalEvent.pageX,
+    mouseY= evt.originalEvent.pageY;
+});
   var draggedCard = "none";
   function setDragSettings()
   {
@@ -21,12 +33,28 @@
         //$(value).css("margin-right", "-100px");
       });
       $(value).on('dragend', function(ev){
-        //alert('dragstop');
-        $(value).animate({"width":"100px"}, 300, function(){});
+        ev.preventDefault();
+        ev.stopPropagation();
+        var doff = $(".deckprep").offset();
+        var dw = $(".deckprep").width();
+        var dh = $(".deckprep").height();
+        //console.log("hi");
+        if(doff.left < mouseX && doff.left + dw > mouseX &&
+        doff.top < mouseY && doff.top + dh > mouseY)
+        {
+          console.log("Dropped inside box!");
+          $(".deckprep #words").text("");
+          $(".deckprep #cards").append("<img src='" + $(value).attr("src") + "' class='handcard' />");
+          $(this).remove();
+        }
+        else {
+          $(value).animate({"width":"100px"}, 300, function(){});
+        }
       });
     });
   }
-  $(document).mouseoff
+  cactusWidth = $(this).width();
+  cactusHeight = $(this).height()-50;
   $(document).ready(function(){
     setDragSettings();
   });
@@ -48,7 +76,8 @@
 
 <div class="foot">
   <div class="deckprep">
-    Prepare your hand
+    <span id="words">Prepare your hand</span>
+    <span id="cards"></span>
   </div>
   <div class="cardholder">
     <img src="cards/halfs/1s.png" alt="ace of spades" class="handcard" draggable="true" />
