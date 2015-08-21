@@ -7,6 +7,19 @@ function parseCN(cnval)
   return output;
 }
 
+function removeCardholderConstraints(){
+  $(".cardholder img").each(function(index, value){
+    $(value).off("dragstart");
+    $(value).off('dragend');
+  });
+}
+function removeDeckprepConstraints(){
+  $(".deckprep img").each(function(index, value){
+    $(value).off("dragstart");
+    $(value).off('dragend');
+  });
+}
+
 var insidePrepArea = false;
 var mouseX = -1;
 var mouseY = -1; /*
@@ -44,6 +57,9 @@ function dragSetCardholder()
         $(".deckprep #words").text("");
         $(".deckprep #cards").append("<img src='" + $(value).attr("src") + "' class='handcard' data-cn='" + $(value).attr("data-cn") + "' draggable='true' />");
         $(this).remove();
+        removeDeckprepConstraints();
+        removeCardholderConstraints();
+        dragSetCardholder();
         dragSetDeckprep();
       }
       else {
@@ -73,7 +89,10 @@ function dragSetDeckprep()
         console.log("Dropped back inside");
         $(".cardholder").append("<img src='" + $(value).attr("src") + "' class='handcard' data-cn='" + $(value).attr("data-cn") + "' draggable='true' />");
         $(this).remove();
+        removeDeckprepConstraints();
+        removeCardholderConstraints();
         dragSetCardholder();
+        dragSetDeckprep();
       }
       else {
         $(value).animate({"width":"100px"}, 300, function(){});
