@@ -93,6 +93,7 @@ function dragSetDeckprep()
         removeCardholderConstraints();
         dragSetCardholder();
         dragSetDeckprep();
+        if($(".deckprep #cards").text() ==)
       }
       else {
         $(value).animate({"width":"100px"}, 300, function(){});
