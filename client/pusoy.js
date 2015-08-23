@@ -49,7 +49,7 @@ function dragSetCardholder()
       var doff = $(".deckprep").offset();
       var dw = $(".deckprep").width();
       var dh = $(".deckprep").height();
-      //console.log("hi");
+
       if(doff.left < mouseX && doff.left + dw > mouseX &&
       doff.top < mouseY && doff.top + dh > mouseY)
       {
@@ -93,7 +93,10 @@ function dragSetDeckprep()
         removeCardholderConstraints();
         dragSetCardholder();
         dragSetDeckprep();
-        if($(".deckprep #cards").text() ==)
+        if($(".deckprep #cards").text() == "")
+        {
+          $(".deckprep #words").text("Prepare your hand");
+        }
       }
       else {
         $(value).animate({"width":"100px"}, 300, function(){});
