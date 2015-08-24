@@ -20,11 +20,12 @@
       url: "serv/pserv.php",
       data: {
         id: sessID,
-        name: displayName
+        name: displayName,
+        type: "findmatch"
       }
     }).done(function( data ) {
       if(data == 'four') {
-        $("#aaer").text("Four players available!");
+        $("#largeloading").text("Four players available!");
       }
       else {
         setTimeout(pingServer, 1000);
