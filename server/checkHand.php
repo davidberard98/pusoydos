@@ -43,7 +43,7 @@ function isValidHand($handArray)
 function isSingle($handArray)
 {
   if(count($handArray) == 1)
-    return true;
+    return $handArray[0];
   return false;
 }
 
@@ -52,7 +52,11 @@ function isDouble($handArray)
   if(count($handArray) == 2)
   {
     if($handArray[0]->rank == $handArray[1]->rank)
-      return true;
+    { // true
+      if($handArray[0]->greaterThan($handArray[1]))
+        return $handArray[0];
+      return $handArray[1];
+    }
   }
   return false;
 }
@@ -69,17 +73,27 @@ function isStraight($handArray)
       ++$ordered[$val];
     }
     $counter = 0;
+    $largest = 12;
     for($i=0;$i<=12;++$i)
     {
       if($counter == 5)
+      {
         return true;
+        $largest = $i-1;
+      }
       if($counter > 0 && $ordered[$i] != 1)
         return false;
       if($ordered[$i] == 1)
         ++$counter;
     }
     if($counter == 5)
-      return true;
+    { // true
+      for($i=0;$i<5;++$i) // find the large card
+      {
+        if(($handArray[$i]->rank-3+13)%13 == $largest)
+          return $handArray[$i];
+      }
+    }
   }
   return false;
 }

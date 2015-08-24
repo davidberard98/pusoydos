@@ -25,6 +25,36 @@ class card {
     }
   }
 
+  function objectiveSuite()
+  {
+    if($suite == 'c')
+      return 0;
+    if($suite == 's')
+      return 1;
+    if($suite == 'h')
+      return 2;
+    if($suite == 'd')
+      return 3;
+  }
+
+  function greaterThan($otherCard)
+  {
+    $thisRankObjective = ($this->rank-3+13)%13;
+    $otherRankObjective = ($otherCard->rank-3+13)%13;
+    if($thisRankObjective > $otherRankObjective)
+      return true;
+    if($thisRankObjective == $otherRankObjective && $this->objectiveSuite() > $otherCard->objectiveSuite())
+      return true;
+    return false;
+  }
+
+  function lessThan($otherCard)
+  {
+    if($this->suite != $otherCard->suite && $this->rank != $otherCard->rank && !$this->greaterThan($otherCard))
+      return true;
+    return false;
+  }
+
 }
 
 
