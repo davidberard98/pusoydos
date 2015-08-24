@@ -24,18 +24,19 @@ function isValidHand($handArray)
     return 1;
   if(isDouble($handArray))
     return 2;
-  if(isStraight($handArray) && !isStraightFlush($handArray))
-    return 3;
-  if(isFlush($handArray))
-    return 4;
-  if(isHouse($handArray))
-    return 5;
-  if(isFour($handArray))
-    return 6;
-  if(isStraightFlush($handArray) && !isRoyalFlush($handArray))
-    return 7;
   if(isRoyalFlush($handArray))
     return 8;
+  if(isStraightFlush($handArray))
+    return 7;
+  if(isFour($handArray))
+    return 6;
+  if(isHouse($handArray))
+    return 5;
+  if(isFlush($handArray))
+    return 4;
+  if(isStraight($handArray))
+    return 3;
+
   return 0;
 }
 
@@ -60,13 +61,15 @@ function isStraight($handArray)
 {
   if(count($handArray) == 5)
   {
-    $ordered = array(0,0,0,0,0,0,0,0,0,0,0,0,0,0);
+                  // 3,4,5,6,7,8,9,0,J,Q,K,A,2
+    $ordered = array(0,0,0,0,0,0,0,0,0,0,0,0,0);
     for($i=0;$i<5;++$i)
     {
-      ++$ordered[$handArray[$i]->rank];
+      $val = ($handArray[$i]->rank-3+13)%13;
+      ++$ordered[$val];
     }
     $counter = 0;
-    for($i=1;$i<=13;++$i)
+    for($i=0;$i<=12;++$i)
     {
       if($counter == 5)
         return true;
@@ -75,6 +78,8 @@ function isStraight($handArray)
       if($ordered[$i] == 1)
         ++$counter;
     }
+    if($counter == 5)
+      return true;
   }
   return false;
 }
@@ -83,7 +88,13 @@ function isFlush($handArray)
 {
   if(count($handArray) == 5)
   {
-    $firstsuite = false;
+    $suitetype = $handArray[0]->suite;
+    for($i=1;$i<5;++$i)
+    {
+      if($handArray[$i]->suite != $suitetype)
+        return false;
+    }
+    return true;
   }
   return false;
 }
@@ -92,8 +103,32 @@ function isHouse($handArray)
 {
   if(count($handArray) == 5)
   {
-    $ca = 0;
-    $cb = 0;
+    $countA = 0;
+    $rankA = 0;
+    $countB = 0;
+    $rankB = 0;
+    for($i=0;$i<5;++$i)
+    {
+      if($handArray[$i]->rank == $rankA)
+        ++$countA;
+      if($handArray[$i]->rank == $rankB)
+        ++$countB;
+      if($handArray[$i]->rank != $rankA && $handArray[$i]->rank != $rankB)
+      {
+        if($rankA == 0)
+        {
+          $rankA = $handArray[$i]->rank;
+          ++$countA;
+        }
+        if($rankA != 0 && $rankB == 0)
+        {
+          $rankB = $handArray[$i]->rank;
+          ++$countB;
+        }
+      }
+    }
+    if(($countA == 2 && $countB == 3) || ($countA == 3 && $countB == 2))
+      return true;
   }
   return false;
 }
@@ -102,10 +137,15 @@ function isFour($handArray)
 {
   if(count($handArray) == 5)
   {
-    $ca = 0;
-    $ta = 0;
-    $cb = 0;
-    $tb = 0;
+    $theRank = $handArray[0]->rank;
+    $counter = 1;
+    for($i=1;$i<5;++$i)
+    {
+      if($handArray[$i]->rank == $theRank)
+        ++$counter;
+    }
+    if($counter == 4)
+      return true;
   }
   return false;
 }
@@ -121,7 +161,14 @@ function isRoyalFlush($handArray)
 {
   if(isStraightFlush($handArray))
   {
-    $lowestCard = 0;
+    $lowest = 14;
+    for($i=0;$i<5;++$i)
+    {
+      if($handArray[$i]->rank < $lowest && $handArray[$i]->rank >= 3)
+        $lowest = $handArray[$i]->rank;
+    }
+    if($lowest == 11)
+      return true;
   }
   return false;
 }
