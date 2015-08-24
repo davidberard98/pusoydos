@@ -78,8 +78,8 @@ function isStraight($handArray)
     {
       if($counter == 5)
       {
-        return true;
         $largest = $i-1;
+        break;
       }
       if($counter > 0 && $ordered[$i] != 1)
         return false;
@@ -108,7 +108,14 @@ function isFlush($handArray)
       if($handArray[$i]->suite != $suitetype)
         return false;
     }
-    return true;
+    //true
+    $highcard = new card("A");
+    for($i=0;$i<5;++$i)
+    {
+      if($handArray[$i]->greaterThan($highcard))
+        $highcard = $handArray[$i];
+    }
+    return $highcard;
   }
   return false;
 }
@@ -142,7 +149,23 @@ function isHouse($handArray)
       }
     }
     if(($countA == 2 && $countB == 3) || ($countA == 3 && $countB == 2))
-      return true;
+    { // true
+      if($countA == 2) // flip it
+      {
+        $countA = 3;
+        $countB = 2;
+        //$holder = $rankA;
+        $rankA = $rankB;
+        //$rankB = $holder;
+      }
+      $highcard = new card("A");
+      for($i=0;$i<5;++$i)
+      {
+        if($handArray[$i]->rank == $rankA && $handArray[$i]->greaterThan($highcard))
+          $highcard = $handArray[$i]
+      }
+      return $highcard;
+    }
   }
   return false;
 }
@@ -159,7 +182,9 @@ function isFour($handArray)
         ++$counter;
     }
     if($counter == 4)
-      return true;
+    { // true
+      return new card($theRank . 'h');
+    }
   }
   return false;
 }
@@ -167,7 +192,7 @@ function isFour($handArray)
 function isStraightFlush($handArray)
 {
   if(isStraight($handArray) && isFlush($handArray))
-    return true;
+    return isStraight($handArray);
   return false;
 }
 
@@ -182,7 +207,7 @@ function isRoyalFlush($handArray)
         $lowest = $handArray[$i]->rank;
     }
     if($lowest == 11)
-      return true;
+      return new card("2" . $handArray[$i]->suite);
   }
   return false;
 }
