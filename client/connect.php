@@ -24,6 +24,9 @@
         type: "findmatch"
       }
     }).done(function( data ) {
+      if(data != "") {
+        console.log(data);
+      }
       if(data == 'four') {
         $("#largeloading").text("Four players available!");
       }

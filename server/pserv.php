@@ -1,6 +1,8 @@
 <?php
 $unmatchedfname = "forbidden/unmatched.pusoydos";
 
+$gameid = sha1($_SERVER['REMOTE_ADDR'] . "_" . microtime(true) . "thisisagame");
+
 if(isset($_POST["id"]) && isset($_POST['type']) && $_POST['type'] == 'findmatch')
 {
   $raw = file_get_contents($unmatchedfname);
@@ -33,9 +35,26 @@ if(isset($_POST["id"]) && isset($_POST['type']) && $_POST['type'] == 'findmatch'
     }
     else if(count($parts[$i]) >= 3)
     {
+      $validcount = -100;
       $output .= $parts[$i][0] . " " . $parts[$i][1] . " " . $parts[$i][2] . "\n";
       if($parts[$i][0] == $_POST['id'])
+      {
+        $matched = true;
         echo "four";
+        $gamefilestuff = file_get_contents("forbidden/" . $parts[$i][2] . ".pusoydos");
+        $gamefilestuff = explode("\n", $gamefilestuff);
+        for($j=0;$j<count($gamefilestuff);++$j)
+        {
+          $gamefilestuff[$j] = explode(" ", $gamefilestuff[$j]);
+          if(count($gamefilestuff[$j]) == 2 && $gamefilestuff[$j][0] == $_POST['id'])
+            $gamefilestuff[$j][] = $_POST['name'];
+          $gamefilestuff[$j] = implode(" ", $gamefilestuff[$j]);
+        }
+        $newlinechar = "\n";
+        $gamefilestuff = implode($newlinechar, $gamefilestuff);
+        //print_r(gettype($gamefilestuff));
+        file_put_contents("forbidden/" . $parts[$i][2] . ".pusoydos", $gamefilestuff);
+      }
     }
     else {
       $parts[$i] = "";
@@ -49,10 +68,10 @@ if(isset($_POST["id"]) && isset($_POST['type']) && $_POST['type'] == 'findmatch'
   }
   if($validcount >= 4)
   {
-    $gameid = sha1($_SERVER['REMOTE_ADDR'] . "_" . microtime(true) . "thisisagame");
     $vcounter = 0;
     $output = "";
-    for($i=0;$i<count($parts) && $vcounter < 4;++$i)
+    $gamefilecontents = "";
+    for($i=0;$i<count($parts);++$i)
     {
       if(count($parts[$i]) == 2)
       {
@@ -60,10 +79,18 @@ if(isset($_POST["id"]) && isset($_POST['type']) && $_POST['type'] == 'findmatch'
         if(trim($parts[$i][0]) == $_POST["id"])
         {
           $matched = true;
-          $output .= $parts[$i][0] . " " . time() . " $gameid\n";
+          $output .= $parts[$i][0] . " " . time();
+          if($vcounter <=4)
+            $output .= " $gameid";
+          $output .= "\n";
+          $gamefilecontents .= $parts[$i][0] . " " . time() . " " . $_POST['name'] . "\n";
         }
         else {
-          $output .= $parts[$i][0] . " " . $parts[$i][1] . " $gameid\n";
+          $output .= $parts[$i][0] . " " . $parts[$i][1];
+          if($vcounter <= 4)
+            $output .= " $gameid";
+          $output .= "\n";
+          $gamefilecontents .= $parts[$i][0] . " " . $parts[$i][1] . "\n";
         }
       }
       else if(count($parts[$i]) >= 3)
@@ -72,6 +99,8 @@ if(isset($_POST["id"]) && isset($_POST['type']) && $_POST['type'] == 'findmatch'
       }
     }
     echo "four";
+    file_put_contents("forbidden/" . $gameid . ".pusoydos", $gamefilecontents);
+    chmod("forbidden/" . $gameid . ".pusoydos", 0666);
   }
   file_put_contents($unmatchedfname, $output);
 }
